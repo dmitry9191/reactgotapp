@@ -14,12 +14,14 @@ export default class gotService {
         return await res.json();
     }
 
-    getAllCharacters() {
-        return this.getResource('/characters?page=4&pageSize=10');
+    async getAllCharacters() {
+        const res = await this.getResource('/characters?page=4&pageSize=10');
+        return res.map(this._transformCharacter);
     }
 
-    getCharater(id) {
-        return this.getResource(`/characters/${id}`);
+    async getCharater(id) {
+        const character = await this.getResource(`/characters/${id}`);
+        return this._transformCharacter(character);
     }
 
     getAllBooks() {
@@ -30,12 +32,45 @@ export default class gotService {
         return this.getResource(`/books/${id}`);
     }
 
-    getAllHouses() {
-        return this.getResource(`/houses?pageSize=20`);
+    async getAllHouses() {
+        const res = await this.getResource(`/houses?pageSize=20`);
+        return res.map(this._transformHouses);
     }
 
-    getHouse(id) {
-        return this.getResource(`/houses/${id}`);
+    async getHouse(id) {
+        const house = await this.getResource(`/houses/${id}`);
+        return this._transformCharacter(house);
+
+    }
+
+    _transformCharacter(char) {
+        return {
+            name: char.name,
+            gender: char.gender,
+            born: char.born,
+            died: char.died || "no data",
+            culture: char.culture
+        }
+    }
+
+    _transformHouses(house) {
+        return {
+            name: house.name,
+            region: house.region,
+            words: house.words,
+            titles: house.titles,
+            overlord: house.overlord,
+            ancestralWeapons: house.ancestralWeapons
+        }
+    }
+
+    _transformBooks(book) {
+        return {
+            name: book.name,
+            numberOfPages: book.numberOfPages,
+            publiser: book.publiser,
+            released: book.released
+        }
     }
 
 }
