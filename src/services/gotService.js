@@ -7,8 +7,7 @@ export default class gotService {
         const res = await fetch(`${this._apiBase}${url}`);
 
         if (!res.ok) {
-            throw new Error(`Could not fetch ${url}
-                             , received ${res.status}`);
+            throw new Error(`Could not fetch ${url}, received ${res.status}`);
         }
         
         return await res.json();
@@ -24,12 +23,14 @@ export default class gotService {
         return this._transformCharacter(character);
     }
 
-    getAllBooks() {
-        return this.getResource(`/books?pageSize=20`);
+    async getAllBooks() {
+        const res = await this.getResource(`/books?pageSize=20`);
+        return res.map(this._transformBooks);
     }
 
-    getBook(id) {
-        return this.getResource(`/books/${id}`);
+    async getBook(id) {
+        const book = await this.getResource(`/books/${id}`);
+        return this._transformBooks(book);
     }
 
     async getAllHouses() {
@@ -47,29 +48,29 @@ export default class gotService {
         return {
             name: char.name,
             gender: char.gender,
-            born: char.born,
-            died: char.died || "no data",
-            culture: char.culture
+            born: char.born || "Unknown",
+            died: char.died || "Unknown",
+            culture: char.culture || "Unknown"
         }
     }
 
     _transformHouses(house) {
         return {
             name: house.name,
-            region: house.region,
-            words: house.words,
-            titles: house.titles,
-            overlord: house.overlord,
-            ancestralWeapons: house.ancestralWeapons
+            region: house.region || "Unknown",
+            words: house.words || "Unknown",
+            titles: house.titles ||"Unknown",
+            overlord: house.overlord ||"Unknown",
+            ancestralWeapons: house.ancestralWeapons || "Unknown"
         }
     }
 
     _transformBooks(book) {
         return {
             name: book.name,
-            numberOfPages: book.numberOfPages,
-            publiser: book.publiser,
-            released: book.released
+            numberOfPages: book.numberOfPages || "Unknown",
+            publiser: book.publiser || "Unknown",
+            released: book.released || "Unknown"
         }
     }
 

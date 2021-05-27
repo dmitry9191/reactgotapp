@@ -1,0 +1,14 @@
+.toggleRandom {
+    margin-bottom: 40px;
+    padding: 10px;
+    background-color: darkslategrey;
+    color: white;
+    border-radius: 10px;
+    border-color: darkslategrey;
+    box-shadow: 0px 0px 30px rgba(256,256,256,.1);
+    outline: none;
+}
+
+.toggleRandom:focus {
+    outline: none;
+}
