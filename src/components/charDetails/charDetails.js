@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import gotService from '../../services/gotService';
 import './charDetails.css';
+import Spinner from '../spinner';
+import ErrorMessage from '../error';
 
 
 export default class CharDetails extends Component {
@@ -8,7 +10,9 @@ export default class CharDetails extends Component {
     gotService = new gotService();
 
     state = {
-        char: null
+        char: null,
+        loading: true,
+        error: false
     }
 
     componentDidMount() {
@@ -21,6 +25,20 @@ export default class CharDetails extends Component {
         }
     }
 
+    componentDidCatch() {
+        this.setState({
+            error: true,
+            char: null
+        })
+    }
+
+    onCharDetLoaded = (char) => {
+        this.setState({
+            loading: false,
+            char
+        })
+    }
+
     updateChar() {
         const {charId} = this.props;
         
@@ -28,19 +46,23 @@ export default class CharDetails extends Component {
             return
         }
 
-        this.gotService.getCharater(charId)
-            .then((char) => {
-                this.setState({
-                    char
-                })
-            })
+        this.gotService.getCharacter(charId)
+            .then(this.onCharDetLoaded);
     }
 
     render() {
 
-        if (!this.state.char) {
+        if (!this.state.char && this.state.error) {
+            return <ErrorMessage/>;
+        } else if (!this.state.char) {
+            return <span className="select-error">Please, choose the character</span>
+        }
+
+        if (this.state.loading) {
             return (
-                <span className="select-error">Please, select character</span>
+                <div className="char-details rounded">
+                    <Spinner/>
+                </div>
             )
         }
 
@@ -48,23 +70,23 @@ export default class CharDetails extends Component {
 
         return (
             <div className="char-details rounded">
-                <h4>{name}</h4>
+                <h4>{name || "Unknown"}</h4>
                 <ul className="list-group list-group-flush">
                     <li className="list-group-item d-flex justify-content-between">
                         <span className="term">Gender</span>
-                        <span>{gender}</span>
+                        <span>{gender || "Unknown"}</span>
                     </li>
                     <li className="list-group-item d-flex justify-content-between">
                         <span className="term">Born</span>
-                        <span>{born}</span>
+                        <span>{born || "Unknown"}</span>
                     </li>
                     <li className="list-group-item d-flex justify-content-between">
                         <span className="term">Died</span>
-                        <span>{died}</span>
+                        <span>{died || "Unknown"}</span>
                     </li>
                     <li className="list-group-item d-flex justify-content-between">
                         <span className="term">Culture</span>
-                        <span>{culture}</span>
+                        <span>{culture || "Unknown"}</span>
                     </li>
                 </ul>
             </div>

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './itemList.css';
 import gotService from '../../services/gotService';
 import Spinner from '../spinner';
+import ErrorMessage from '../error';
 
 
 export default class ItemList extends Component {
@@ -9,7 +10,8 @@ export default class ItemList extends Component {
     gotService = new gotService();
 
     state = {
-        charList: null
+        charList: null,
+        error: false
     }
 
     componentDidMount() {
@@ -21,12 +23,18 @@ export default class ItemList extends Component {
             })
     }
 
+    componentDidCatch() {
+        this.setState({
+            error: true
+        })
+    }
+
     renderItems(arr) {
-        return arr.map((item, i) => {
+        return arr.map((item) => {
+            console.log(item.id);
             return(
-                <li 
-                    key={i}
-                    onClick={() => this.props.onCharSelected(31 + i)}
+                <li key={item.id}
+                    onClick={() => this.props.onCharSelected(item.id)}
                     className="list-group-item">
                     {item.name}
                 </li>
@@ -40,6 +48,10 @@ export default class ItemList extends Component {
 
         if (!charList) {
             return <Spinner/>;
+        }
+
+        if (this.state.error) {
+            return <ErrorMessage/>;
         }
 
         const items = this.renderItems(charList);

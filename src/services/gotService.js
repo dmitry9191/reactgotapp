@@ -18,7 +18,7 @@ export default class gotService {
         return res.map(this._transformCharacter);
     }
 
-    async getCharater(id) {
+    async getCharacter(id) {
         const character = await this.getResource(`/characters/${id}`);
         return this._transformCharacter(character);
     }
@@ -44,13 +44,20 @@ export default class gotService {
 
     }
 
-    _transformCharacter(char) {
+    _extractId(item) {
+        const idRegExp = /\/((\d)*)$/;
+        return item.url.match(idRegExp)[0];
+    }
+
+    _transformCharacter = (char) => {
+
         return {
             name: char.name,
             gender: char.gender,
             born: char.born || "Unknown",
             died: char.died || "Unknown",
-            culture: char.culture || "Unknown"
+            culture: char.culture || "Unknown",
+            id: this._extractId(char)
         }
     }
 
@@ -75,11 +82,3 @@ export default class gotService {
     }
 
 }
-
-const got = new gotService();
-
-got.getAllHouses()
-    .then(res => res.forEach(item => console.log(item.name)));
-
-got.getHouse(2)
-    .then(res => console.log(res.name));
