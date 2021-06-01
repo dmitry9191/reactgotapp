@@ -4,6 +4,16 @@ import './charDetails.css';
 import Spinner from '../spinner';
 import ErrorMessage from '../error';
 
+const Field = ({char, field, label}) => {
+    return (
+       <li className="list-group-item d-flex justify-content-between">
+            <span className="term">{label}</span>
+            <span>{char[field] || "Unknown"}</span>
+        </li> 
+    )
+}   
+
+export {Field};
 
 export default class CharDetails extends Component {
 
@@ -55,10 +65,10 @@ export default class CharDetails extends Component {
         if (!this.state.char && this.state.error) {
             return <ErrorMessage/>;
         } else if (!this.state.char) {
-            return <span className="select-error">Please, choose the character</span>
+            return <span className="select-error">Please, select a character</span>
         }
 
-        if (this.state.loading) {
+        if (this.state.loading) {   
             return (
                 <div className="char-details rounded">
                     <Spinner/>
@@ -66,28 +76,18 @@ export default class CharDetails extends Component {
             )
         }
 
-        const {name, gender, born, died, culture} = this.state.char;
+        const {char} = this.state;
+        const {name} = char;
 
         return (
             <div className="char-details rounded">
                 <h4>{name || "Unknown"}</h4>
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item d-flex justify-content-between">
-                        <span className="term">Gender</span>
-                        <span>{gender || "Unknown"}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <span className="term">Born</span>
-                        <span>{born || "Unknown"}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <span className="term">Died</span>
-                        <span>{died || "Unknown"}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <span className="term">Culture</span>
-                        <span>{culture || "Unknown"}</span>
-                    </li>
+                    {
+                        React.Children.map(this.props.children, (child) => {
+                            return React.cloneElement(child, {char});
+                        })
+                    }
                 </ul>
             </div>
         );
