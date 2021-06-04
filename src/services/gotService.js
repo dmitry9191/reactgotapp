@@ -77,7 +77,7 @@ export default class gotService {
             name: book.name,
             numberOfPages: book.numberOfPages || "Unknown",
             publisher: book.publisher || "Unknown",
-            released: book.released || "Unknown",
+            released: book.released.slice(0, -9) || "Unknown",
             id: this._extractId(book)
         }
     }

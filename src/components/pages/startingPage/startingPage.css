@@ -1,0 +1,21 @@
+.title {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 60px;
+    color: whitesmoke;
+    text-align: center;
+}
+
+.gotImg {
+    width: 600px;
+    height: 400px;
+    background-color: darkslategrey;
+    border-radius: 20px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%
+}

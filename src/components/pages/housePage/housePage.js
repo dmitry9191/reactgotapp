@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ItemList from '../../itemList';
-import CharDetails, {Field} from '../../charDetails';
+import ItemDetails, {Field} from '../../itemDetails';
 import ErrorMessage from '../../error';
 import gotService from '../../../services/gotService';
 import RowBlock from '../../rowBlock';
@@ -37,17 +37,17 @@ export default class HousePage extends Component {
         const itemList =  (<ItemList onItemSelected={this.onItemSelected}
                                     getData={this.gotService.getAllHouses}
                                     renderItem={({name, region}) => `${name} (${region})`}/>),
-              charDeatails = (
-                <CharDetails itemId={this.state.selectedHouse}
+              ItemDeatails = (
+                <ItemDetails itemId={this.state.selectedHouse}
                              getData={this.gotService.getHouse}>
                     <Field field="region" label="Region"/>
                     <Field field="words" label="Words"/>
                     <Field field="titles" label="Titles"/>
-                </CharDetails>  
+                </ItemDetails>  
               );
 
         return (
-            <RowBlock left={itemList} right={charDeatails}/>
+            <RowBlock left={itemList} right={ItemDeatails}/>
         )
     }
 }

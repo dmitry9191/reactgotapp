@@ -7,6 +7,11 @@ import './app.css';
 import CharacterPage from '../pages/characterPage';
 import BookPage from '../pages/bookPage';
 import HousePage from '../pages/housePage';
+import BookItem from '../pages/bookItem';
+import StartingPage from '../pages/startingPage';
+import UnknownPage from '../pages/unknownPage';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {Switch} from 'react-router-dom';
 
 
 export default class App extends Component  {
@@ -35,7 +40,7 @@ export default class App extends Component  {
             }
         })
     }
-    
+
     render() {
 
         const {btnToggler} = this.state;
@@ -47,22 +52,34 @@ export default class App extends Component  {
         }
 
         return (
-            <div>
-                <Container>
-                    <Header />
-                </Container>
-                <Container>
-                    <Row>
-                        <Col lg={{size: 5, offset: 0}}>
-                            {charBlock}
-                            <button onClick={this.toggleChar} className="toggleRandom">Toggle random character</button>
-                        </Col>
-                    </Row>
-                    <CharacterPage/>
-                    <BookPage/>
-                    <HousePage/>
-                </Container>
-            </div>
+            <Router>
+                <div className="app">
+                    <Container>
+                        <Header />
+                    </Container>
+                    <Container>
+                        <Row>
+                            <Col lg={{size: 5, offset: 0}}>
+                                {charBlock}
+                                <button onClick={this.toggleChar} className="toggleRandom">Toggle random character</button>
+                            </Col>
+                        </Row>
+                        <Switch>
+                            <Route path="/" exact component={StartingPage}/>
+                            <Route path="/characters/" exact component={CharacterPage}/>
+                            <Route path="/houses/" exact component={HousePage}/>
+                            <Route path="/books/" exact component={BookPage}/>
+                            <Route path="/books/:id" render={
+                                ({match}) => {
+                                    const {id} = match.params;
+                                    return <BookItem bookId={id}/>
+                                }
+                            }/>
+                            <Route><UnknownPage/></Route>
+                        </Switch>
+                    </Container>
+                </div>
+            </Router>
         );
     }
 };
