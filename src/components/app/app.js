@@ -23,7 +23,7 @@ export default class App extends Component  {
 
     state = {
         btnToggler: false,
-        error: false
+        error: false,
     }
 
     componentDidCatch() {
@@ -75,7 +75,7 @@ export default class App extends Component  {
                                     return <BookItem bookId={id}/>
                                 }
                             }/>
-                            <Route><UnknownPage/></Route>
+                            <Route component={UnknownPage}/>
                         </Switch>
                     </Container>
                 </div>
