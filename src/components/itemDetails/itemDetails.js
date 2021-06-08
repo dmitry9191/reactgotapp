@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import './itemDetails.css';
 import Spinner from '../spinner';
 import ErrorMessage from '../error';
@@ -14,80 +14,65 @@ const Field = ({item, field, label}) => {
 
 export {Field};
 
-export default class ItemDetails extends Component {
+function ItemDetails({getData, itemId, children}) {
 
-    state = {
-        item: null,
-        loading: true,
-        error: false
+    const [item, updateItem] = useState(null),
+          [loading, updateLoading] = useState(true),
+          [error, updateError] = useState(false);
+
+    useEffect(() => {
+        updateChar();
+    }, [children]);
+
+    function onItemDetLoaded(item) {
+        updateItem(item);
+        updateLoading(false);
     }
 
-    componentDidMount() {
-        this.updateChar();
+    function updateChar() {
+       
+    if (!itemId) {
+        return
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.itemId !== prevProps.itemId) {
-            this.updateChar();
-        }
+    getData(itemId)
+        .then(onItemDetLoaded);
     }
 
-    componentDidCatch() {
-        this.setState({
-            error: true,
-            item: null
-        })
+    if (!item && error) {
+        return <ErrorMessage/>;
+    } else if (!item) {
+        return <span className="select-error">Please, select a character</span>
     }
 
-    onItemDetLoaded = (item) => {
-        this.setState({
-            loading: false,
-            item
-        })
+    if (loading) {   
+        return (
+            <div className="char-details rounded">
+                <Spinner/>
+            </div>
+        )
     }
 
-    updateChar() {
-        const {itemId} = this.props;
-        const {getData} = this.props;
-        
-        if (!itemId) {
-            return
-        }
+    const {name} = item;
 
-        getData(itemId)
-            .then(this.onItemDetLoaded);
-    }
-
-    render() {
-
-        if (!this.state.item && this.state.error) {
-            return <ErrorMessage/>;
-        } else if (!this.state.item) {
-            return <span className="select-error">Please, select a character</span>
-        }
-
-        if (this.state.loading) {   
-            return (
-                <div className="char-details rounded">
-                    <Spinner/>
-                </div>
-            )
-        }
-
-        const {item} = this.state;
-        const {name} = item;
-
+    try {
         return (
             <div className="char-details rounded">
                 <h4>{name || "Unknown"}</h4>
                 <ul className="list-group list-group-flush">
                     {
-                        React.Children.map(this.props.children, (child) => {
+                        React.Children.map(children, (child) => {
                             return React.cloneElement(child, {item});
                         })
                     }
                 </ul>
             </div>
         );
+    } catch(err) {
+        updateError(true);
+        updateItem(null);
+        console.log(err);
     }
 }
+
+export default ItemDetails;

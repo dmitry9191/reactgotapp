@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import './itemList.css';
 import Spinner from '../spinner';
-/* import ErrorMessage from '../error';*/
 
 function ItemList({getData, onItemSelected, renderItem}) {
 
@@ -13,13 +12,6 @@ function ItemList({getData, onItemSelected, renderItem}) {
                 updateList(data); 
             })
     }); 
-
-
-    /* componentDidCatch() {
-        this.setState({
-            error: true
-        })
-    } */
 
     function renderItems(arr) {
         return arr.map((item) => {
@@ -39,10 +31,6 @@ function ItemList({getData, onItemSelected, renderItem}) {
     if (!itemList) {
         return <Spinner/>;
     }
-
-    /* if (this.state.error) {
-        return <ErrorMessage/>;
-    } */
 
     const items = renderItems(itemList);
 
